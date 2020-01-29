@@ -161,7 +161,7 @@ document.getElementById('comment-form').addEventListener('submit', function(e) {
 
     var xhr = new XMLHttpRequest();
     xhr.onload = function() {
-        if (xhr.status === 201) {
+        if (xhr.status === 201 || xhr.status === 304) {
             console.log(xhr.responseText);
             getComment(id);
         } else {
