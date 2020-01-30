@@ -4,11 +4,16 @@ const morgan = require('morgan');
 const path = require('path');
 const session = require('express-session');
 const flash = require('connect-flash');
-require('dotenv').config();
+const passport = require('passport');
+require('dotenv').config({path: path.join(__dirname, '.env')});
 
 const pageRouter = require('./routes/page');
+const { sequelize } = require('./models');
+const passportConfig = require('./passport');
 
 const app = express();
+sequelize.sync();
+passportConfig(passport);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
@@ -18,17 +23,20 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+console.log(process.env.COOKIE_SECRET);
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(session({
-    resave: false,
-    saveUninitialized: false,
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-        httpOnly: true,
-        secure: false
+    resave: false,  // 요청이 왔을 때 세션에 수정 사항이 생기지 않더라도 세션을 다시 저장할지에 대한 설정
+    saveUninitialized: false,  // 세션에 저장할 내역이 없더라도 세션을 저장할지에 대한 설정
+    secret: process.env.COOKIE_SECRET,  // 쿠키 전송시 쿠키에 서명을 추가하기 위해 필요한 값
+    cookie: {  
+        httpOnly: true,  // 클라이언트에서 쿠키를 확인하지 못하도록 설정 (true)
+        secure: false  // https 가 아닌 환경에서도 사용할 수 있게 설정 (false)
     }
 }));
 app.use(flash());
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', pageRouter);
 
