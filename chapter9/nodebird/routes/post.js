@@ -8,21 +8,21 @@ const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-fs.readdir('uploads', (error) => {
+fs.readdir('chapter9/nodebird/uploads', (error) => {
     if (error) {
         console.error('uploads 폴더가 없어 uploads 폴더를 생성합니다.');
-        fs.mkdirSync('uploads');
+        fs.mkdirSync('chapter9/nodebird/uploads');
     }
 });
 
 const upload = multer({
     storage: multer.diskStorage({
         destination(req, res, callback) {
-            callback(null, 'uploads/');
+            callback(null, 'chapter9/nodebird/uploads/');
         },
         filename(req, file, callback) {
             const ext = path.extname(file.originalname);
-            callback(null, path.basename(file.originalname, ext) + Data.now() + ext);
+            callback(null, path.basename(file.originalname, ext) + Date.now() + ext);
         }
     }),
     limits: {
