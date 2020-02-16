@@ -19,10 +19,10 @@ block content
                         td= room.max
                         td(style='color:' + room.owner)= room.owner
                         -var password = room.password ? 'true' : 'false';
-                        td: button(data-password=password data-id=room.id).join-btn 입장
+                        td: button.join-btn(data-password=password data-id=room._id) 입장
     .error-message= error
     a(href='/room') 채팅방 생성
-    script(src='/socket.id/socket.io.js')
+    script(src='/socket.io/socket.io.js')
     script.
         var socket = io.connect('http://localhost:8005/room', {
             path: '/socket.io'
@@ -71,7 +71,6 @@ block content
                 location.href = '/room/' + e.target.dataset.id;
             }
         }
-
         document.querySelectorAll('.join-btn').forEach(function (btn) {
             btn.addEventListener('click', addBtnEvent);
         });
