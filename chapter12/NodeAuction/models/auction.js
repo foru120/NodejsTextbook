@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    sequelize.define('auction', {
+    return sequelize.define('auction', {
         bid: {
             type: DataTypes.INTEGER,
             allowNull: false,
